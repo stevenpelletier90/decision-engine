@@ -2,8 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
-const isDevelopment = process.env.NODE_ENV === 'development';
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -22,11 +21,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.scss$/,
-        use: [isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
   },
@@ -36,12 +35,12 @@ module.exports = {
       filename: 'index.html',
     }),
     new CleanWebpackPlugin(),
-    !isDevelopment &&
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
-      }),
-  ].filter(Boolean),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+    new Dotenv(),
+  ],
   devServer: {
     static: path.join(__dirname, 'dist'),
     compress: true,
